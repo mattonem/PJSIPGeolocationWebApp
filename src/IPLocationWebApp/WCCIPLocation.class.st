@@ -48,6 +48,6 @@ WCCIPLocation >> start [
 		(self getElementById: #country) innerHTML: response country.
 		(self getElementById: #city) innerHTML: response city.
 		(self getElementById: #timezone) innerHTML: response timezone ].
-	req := client method: 'GET' url: 'http://ip-api.com/json'.
+	req := client method: 'GET' url: 'https://ipinfo.io?token=4ab8b8f87a94b1'.
 	req send: ''
 ]
