@@ -27,6 +27,13 @@ IPGeolocWebApp class >> bridgeClientClass [
 ]
 
 { #category : #accessing }
+IPGeolocWebApp class >> exporterClass [
+	<pharoJsSkip>
+	
+	^ PjFileExporterWithIndexHtml
+]
+
+{ #category : #accessing }
 IPGeolocWebApp class >> generateHtmlUsing: html [
 
 	<pharoJsSkip>
