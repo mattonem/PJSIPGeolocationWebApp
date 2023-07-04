@@ -41,38 +41,28 @@ WCCIPLocation >> renderHtmlOn: html [
 						class: 'card-body';
 						with: [ 
 							html div
-								class: 'row';
+								class: 'mb-3';
 								with: [ 
 									html div
-										class: 'col-auto';
-										with: [ 
-											html label
-												for: 'inputIP';
-												class: 'col-form-label';
-												with: 'Lookup IP: ' ].
-									html div
-										class: 'col-auto';
+										class: ' form-floating';
 										with: [ 
 											html textInput
 												class: 'form-control';
-												id: 'inputIP' ].
-									html div
-										class: 'col-auto';
-										with: [ 
-											html button
-												class: 'btn btn-primary';
-												id: 'sumitButton';
-												with: 'Go!' ] ] ].
+												placeholder: '8.8.8.8';
+												id: 'inputIP'.
+											html label
+												for: 'inputIP';
+												with: 'Lookup IP' ] ].
+							html div
+								class: 'mb-3';
+								with: [ 
+									html button
+										class: 'btn btn-primary';
+										id: 'sumitButton';
+										with: 'Go!' ] ].
 					html unorderedList
 						class: 'list-group list-group-flush';
 						with: [ 
-							html listItem
-								class: 'list-group-item';
-								with: [ 
-									html span with: 'IP: '.
-									html span
-										id: #ip;
-										with: '...' ].
 							html listItem
 								class: 'list-group-item';
 								with: [ 
@@ -113,7 +103,8 @@ WCCIPLocation >> start [
 		aClient currentTarget status = 200
 			ifTrue: [ 
 				| posArray pos |
-				(self getElementById: #ip) innerHTML: response ip.
+				(self getElementById: #inputIP) value: response ip.
+
 				(self getElementById: #country) innerHTML: response country.
 				(self getElementById: #city) innerHTML: response city.
 				(self getElementById: #timezone) innerHTML: response timezone.
@@ -123,6 +114,9 @@ WCCIPLocation >> start [
 				(self componentNamed: #map) addMarker: pos ]
 			ifFalse: [ 
 				(self getElementById: #cardRoot) classList add: 'text-bg-danger'.
+				(self getElementById: #country) innerHTML: '...'.
+				(self getElementById: #city) innerHTML: '...'.
+				(self getElementById: #timezone) innerHTML: '...'.
 				(self getElementById: #errorMessage) innerHTML:
 					(JSON stringify: response with: nil and: 4) ] ].
 	(self getElementById: #sumitButton)
