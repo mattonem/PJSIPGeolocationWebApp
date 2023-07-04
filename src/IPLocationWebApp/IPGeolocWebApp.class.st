@@ -1,8 +1,8 @@
 Class {
 	#name : #IPGeolocWebApp,
 	#superclass : #PjFileBasedWebApp,
-	#traits : 'ComponentHolder',
-	#classTraits : 'ComponentHolder classTrait',
+	#traits : 'StaticComponentHolder',
+	#classTraits : 'StaticComponentHolder classTrait',
 	#category : #IPLocationWebApp
 }
 
