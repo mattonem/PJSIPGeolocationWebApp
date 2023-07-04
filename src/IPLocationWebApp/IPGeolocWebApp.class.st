@@ -37,17 +37,7 @@ IPGeolocWebApp class >> exporterClass [
 IPGeolocWebApp class >> generateHtmlUsing: html [
 
 	<pharoJsSkip>
-	html div
-		class: 'container';
-		with: [ :cont | 
-			cont div
-				class: 'card';
-				with: [ :card | 
-					card div
-						class: 'card-header';
-						with: 'Where is my IP'.
-
-					WCCIPLocation for: self on: html named: #ipGeoloc ] ]
+	WCCIPLocation for: self on: html named: #ipGeoloc
 ]
 
 { #category : #accessing }
