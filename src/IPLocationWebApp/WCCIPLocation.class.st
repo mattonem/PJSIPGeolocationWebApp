@@ -104,7 +104,8 @@ WCCIPLocation >> start [
 			ifTrue: [ 
 				| posArray pos |
 				(self getElementById: #inputIP) value: response ip.
-
+				(self getElementById: #cardRoot) classList remove: 'text-bg-danger'.
+				(self getElementById: #errorMessage) innerHTML:''.
 				(self getElementById: #country) innerHTML: response country.
 				(self getElementById: #city) innerHTML: response city.
 				(self getElementById: #timezone) innerHTML: response timezone.
