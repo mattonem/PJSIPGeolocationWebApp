@@ -62,5 +62,5 @@ IPGeolocWebApp class >> updateHtmlRoot: root [
 IPGeolocWebApp >> initialize [
 
 	super initialize.
-	self initializeComponentHolder 
+	self initializeComponentHolder  
 ]
