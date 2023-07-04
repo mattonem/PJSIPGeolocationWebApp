@@ -1,6 +1,8 @@
 Class {
 	#name : #WCCIPLocation,
 	#superclass : #WCComponent,
+	#traits : 'InstanceComponentHolder',
+	#classTraits : 'InstanceComponentHolder classTrait',
 	#pools : [
 		'PjDomGlobals'
 	],
@@ -52,6 +54,7 @@ WCCIPLocation >> renderHtmlOn: html [
 									html span
 										id: #timezone;
 										with: '...' ] ].
+					WCCOSMapWidget for: self on: html named: #map.
 					html div
 						class: 'card-body';
 						with: [ html preformatted id: 'errorMessage' ] ] ]
@@ -62,16 +65,22 @@ WCCIPLocation >> start [
 
 	| client req |
 	client := PjHttpClient new.
+	self initializeComponentHolder.
 	client onLoad: [ :aClient | 
 		| response |
 		response := PhxJsonReader materializeJsonString:
 			            aClient currentTarget responseText.
 		aClient currentTarget status = 200
 			ifTrue: [ 
+				| posArray pos |
 				(self getElementById: #ip) innerHTML: response ip.
 				(self getElementById: #country) innerHTML: response country.
 				(self getElementById: #city) innerHTML: response city.
-				(self getElementById: #timezone) innerHTML: response timezone ]
+				(self getElementById: #timezone) innerHTML: response timezone.
+				posArray := response loc splitOn: ','.
+				pos := (posArray at: 1) asNumber @ (posArray at: 2) asNumber.
+				(self componentNamed: #map) setView: pos.
+				(self componentNamed: #map) addMarker: pos ]
 			ifFalse: [ 
 				(self getElementById: #cardRoot) classList add: 'text-bg-danger'.
 				(self getElementById: #errorMessage) innerHTML:
