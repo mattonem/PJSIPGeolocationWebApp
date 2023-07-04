@@ -3,11 +3,26 @@ Class {
 	#superclass : #WCComponent,
 	#traits : 'InstanceComponentHolder',
 	#classTraits : 'InstanceComponentHolder classTrait',
+	#instVars : [
+		'client'
+	],
 	#pools : [
 		'PjDomGlobals'
 	],
 	#category : #IPLocationWebApp
 }
+
+{ #category : #rendering }
+WCCIPLocation >> lookupIp: inputIP [
+
+	| req |
+	req := client
+		       method: 'GET'
+		       url:
+		       'https://ipinfo.io/' , inputIP
+		       , '?token=4ab8b8f87a94b1'.
+	req send: ''
+]
 
 { #category : #rendering }
 WCCIPLocation >> renderHtmlOn: html [
@@ -22,7 +37,32 @@ WCCIPLocation >> renderHtmlOn: html [
 					card div
 						class: 'card-header';
 						with: 'Where is my IP'.
-
+					html div
+						class: 'card-body';
+						with: [ 
+							html div
+								class: 'row';
+								with: [ 
+									html div
+										class: 'col-auto';
+										with: [ 
+											html label
+												for: 'inputIP';
+												class: 'col-form-label';
+												with: 'Lookup IP: ' ].
+									html div
+										class: 'col-auto';
+										with: [ 
+											html textInput
+												class: 'form-control';
+												id: 'inputIP' ].
+									html div
+										class: 'col-auto';
+										with: [ 
+											html button
+												class: 'btn btn-primary';
+												id: 'sumitButton';
+												with: 'Go!' ] ] ].
 					html unorderedList
 						class: 'list-group list-group-flush';
 						with: [ 
@@ -63,7 +103,7 @@ WCCIPLocation >> renderHtmlOn: html [
 { #category : #rendering }
 WCCIPLocation >> start [
 
-	| client req |
+	| inputIP |
 	client := PjHttpClient new.
 	self initializeComponentHolder.
 	client onLoad: [ :aClient | 
@@ -85,8 +125,8 @@ WCCIPLocation >> start [
 				(self getElementById: #cardRoot) classList add: 'text-bg-danger'.
 				(self getElementById: #errorMessage) innerHTML:
 					(JSON stringify: response with: nil and: 4) ] ].
-	req := client
-		       method: 'GET'
-		       url: 'https://ipinfo.io?token=4ab8b8f87a94b1'.
-	req send: ''
+	(self getElementById: #sumitButton)
+		addEventListener: #click
+		block: [ self lookupIp: (self getElementById: #inputIP) value ].
+	self lookupIp: ''
 ]
