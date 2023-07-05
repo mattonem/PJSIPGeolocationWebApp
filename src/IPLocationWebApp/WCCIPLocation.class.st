@@ -13,6 +13,16 @@ Class {
 }
 
 { #category : #rendering }
+WCCIPLocation >> _getLocationHash [
+	<javascript:'return window.location.hash'>
+]
+
+{ #category : #rendering }
+WCCIPLocation >> getLocationHash [
+	^ (self _getLocationHash splitOn: '/') allButFirst
+]
+
+{ #category : #rendering }
 WCCIPLocation >> lookupIp: inputIP [
 
 	| req |
@@ -93,7 +103,7 @@ WCCIPLocation >> renderHtmlOn: html [
 { #category : #rendering }
 WCCIPLocation >> start [
 
-	| inputIP |
+	| hash defaultValue |
 	client := PjHttpClient new.
 	self initializeComponentHolder.
 	client onLoad: [ :aClient | 
@@ -104,8 +114,9 @@ WCCIPLocation >> start [
 			ifTrue: [ 
 				| posArray pos |
 				(self getElementById: #inputIP) value: response ip.
-				(self getElementById: #cardRoot) classList remove: 'text-bg-danger'.
-				(self getElementById: #errorMessage) innerHTML:''.
+				(self getElementById: #cardRoot) classList remove:
+					'text-bg-danger'.
+				(self getElementById: #errorMessage) innerHTML: ''.
 				(self getElementById: #country) innerHTML: response country.
 				(self getElementById: #city) innerHTML: response city.
 				(self getElementById: #timezone) innerHTML: response timezone.
@@ -123,5 +134,8 @@ WCCIPLocation >> start [
 	(self getElementById: #sumitButton)
 		addEventListener: #click
 		block: [ self lookupIp: (self getElementById: #inputIP) value ].
-	self lookupIp: ''
+	(self getElementById: #inputIP) value:
+		(self getLocationHash at: 1 ifAbsent: [ '' ]).
+
+	self lookupIp: (self getElementById: #inputIP) value
 ]
