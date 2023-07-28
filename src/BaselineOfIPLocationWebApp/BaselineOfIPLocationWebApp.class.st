@@ -11,7 +11,7 @@ BaselineOfIPLocationWebApp >> baseline: spec [
 	spec for: #common do: [ 
 		spec
 			baseline: 'Camping'
-			with: [ spec repository: 'github://mattonem/WildCamping:master' ].
+			with: [ spec repository: 'github://mattonem/WildCamping' ].
 		spec baseline: 'PjHttpClient' 
 			with: [ spec repository: 'github://mattonem/RestClientApp:master' ].
 
