@@ -6,12 +6,6 @@ Class {
 	#category : #IPLocationWebApp
 }
 
-{ #category : #adding }
-IPGeolocWebApp class >> addComponent: aWCCIPLocation named: aString [ 
-	<pharoJsSkip>
-	self addStaticComponent: aWCCIPLocation named: aString
-]
-
 { #category : #accessing }
 IPGeolocWebApp class >> appClasses [
 
