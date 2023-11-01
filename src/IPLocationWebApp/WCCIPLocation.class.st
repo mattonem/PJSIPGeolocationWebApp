@@ -1,6 +1,6 @@
 Class {
 	#name : #WCCIPLocation,
-	#superclass : #AnObsoleteWCComponent,
+	#superclass : #WCComponent,
 	#traits : 'InstanceComponentHolder',
 	#classTraits : 'InstanceComponentHolder classTrait',
 	#instVars : [
