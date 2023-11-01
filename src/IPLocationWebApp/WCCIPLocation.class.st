@@ -1,6 +1,6 @@
 Class {
 	#name : #WCCIPLocation,
-	#superclass : #WCComponent,
+	#superclass : #AnObsoleteWCComponent,
 	#traits : 'InstanceComponentHolder',
 	#classTraits : 'InstanceComponentHolder classTrait',
 	#instVars : [
@@ -94,7 +94,7 @@ WCCIPLocation >> renderHtmlOn: html [
 									html span
 										id: #timezone;
 										with: '...' ] ].
-					WCCOSMapWidget for: self on: html named: #map.
+					WCCMap for: self on: html named: #map.
 					html div
 						class: 'card-body';
 						with: [ html preformatted id: 'errorMessage' ] ] ]
