@@ -23,15 +23,11 @@ WCCIPLocation >> getLocationHash [
 ]
 
 { #category : #rendering }
-WCCIPLocation >> lookupIp: inputIP [
-
-	| req |
-	req := client
-		       method: 'GET'
-		       url:
-		       'https://ipinfo.io/' , inputIP
-		       , '?token=4ab8b8f87a94b1'.
-	req send: ''
+WCCIPLocation >> lookupIp: inputIP do: aBlock [
+client
+		       getUrl:
+		       'https://ipinfo.io/' , inputIP , '?token=4ab8b8f87a94b1'
+		       do: aBlock
 ]
 
 { #category : #rendering }
@@ -103,39 +99,50 @@ WCCIPLocation >> renderHtmlOn: html [
 { #category : #rendering }
 WCCIPLocation >> start [
 
-	| hash defaultValue |
 	client := PjHttpClient new.
 	self initializeComponentHolder.
-	client onLoad: [ :aClient | 
-		| response |
-		response := PhxJsonReader materializeJsonString:
-			            aClient currentTarget responseText.
-		aClient currentTarget status = 200
-			ifTrue: [ 
-				| posArray pos |
-				(self getElementById: #inputIP) value: response ip.
-				(self getElementById: #cardRoot) classList remove:
-					'text-bg-danger'.
-				(self getElementById: #errorMessage) innerHTML: ''.
-				(self getElementById: #country) innerHTML: response country.
-				(self getElementById: #city) innerHTML: response city.
-				(self getElementById: #timezone) innerHTML: response timezone.
-				posArray := response loc splitOn: ','.
-				pos := (posArray at: 1) asNumber @ (posArray at: 2) asNumber.
-				(self componentNamed: #map) setView: pos.
-				(self componentNamed: #map) addMarker: pos ]
-			ifFalse: [ 
-				(self getElementById: #cardRoot) classList add: 'text-bg-danger'.
-				(self getElementById: #country) innerHTML: '...'.
-				(self getElementById: #city) innerHTML: '...'.
-				(self getElementById: #timezone) innerHTML: '...'.
-				(self getElementById: #errorMessage) innerHTML:
-					(JSON stringify: response with: nil and: 4) ] ].
+
+
 	(self getElementById: #sumitButton)
 		addEventListener: #click
-		block: [ self lookupIp: (self getElementById: #inputIP) value ].
+		block: [
+			self
+				lookupIp: (self getElementById: #inputIP) value
+				do: [ :responseText :status |
+					self updateIpLoc: responseText status: status ] ].
 	(self getElementById: #inputIP) value:
 		(self getLocationHash at: 1 ifAbsent: [ '' ]).
+	self
+		lookupIp: (self getElementById: #inputIP) value
+		do: [ :responseText :status |
+			self updateIpLoc: responseText status: status ]
+]
 
-	self lookupIp: (self getElementById: #inputIP) value
+{ #category : #rendering }
+WCCIPLocation >> updateIpLoc: responseText status: status [
+
+| response |
+					response := PhxJsonReader materializeJsonString: responseText.
+					status = 200
+						ifTrue: [
+							| posArray pos |
+							(self getElementById: #inputIP) value: response ip.
+							(self getElementById: #cardRoot) classList remove:
+								'text-bg-danger'.
+							(self getElementById: #errorMessage) innerHTML: ''.
+							(self getElementById: #country) innerHTML: response country.
+							(self getElementById: #city) innerHTML: response city.
+							(self getElementById: #timezone) innerHTML: response timezone.
+							posArray := response loc splitOn: ','.
+							pos := (posArray at: 1) asNumber @ (posArray at: 2) asNumber.
+							(self componentNamed: #map) setView: pos.
+							(self componentNamed: #map) addMarker: pos ]
+						ifFalse: [
+							(self getElementById: #cardRoot) classList add:
+								'text-bg-danger'.
+							(self getElementById: #country) innerHTML: '...'.
+							(self getElementById: #city) innerHTML: '...'.
+							(self getElementById: #timezone) innerHTML: '...'.
+							(self getElementById: #errorMessage) innerHTML:
+								(JSON stringify: response with: nil and: 4) ]
 ]
